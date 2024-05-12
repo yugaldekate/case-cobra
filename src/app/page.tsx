@@ -1,15 +1,15 @@
 import Image from "next/image";
-import { ArrowRight, Check, Star } from 'lucide-react';
+import { Check, Star } from 'lucide-react';
 
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import Phone from "@/components/Phone";
+import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 
 export default function Home() {
     return (
         <div className="bg-slate-50">
             <section>
                 <MaxWidthWrapper className='pb-24 sm:pb-32 lg:pb-52 pt-10 lg:pt-24 xl:pt-32 lg:grid lg:grid-cols-3 lg:gap-x-0 xl:gap-x-8'>
-                    <div className='col-span-2 px-6 lg:px-0 lg:pt-4 border border-black'>
+                    <div className='col-span-2 px-6 lg:px-0 lg:pt-4'>
                         <div className='relative flex flex-col items-center mx-auto text-center lg:text-left lg:items-start'>
                             <div className='absolute left-0 -top-20 hidden lg:block  w-28'>
                                 <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t via-slate-50/50 from-slate-50 h-28' />
@@ -105,7 +105,7 @@ export default function Home() {
                         <div className='relative md:max-w-xl'>
                             <Image
                                 src='/your-image.png'
-                                className='absolute w-40 lg:w-52 left-56 -top-20 select-none hidden sm:block lg:hidden xl:block'
+                                className='absolute w-40 lg:w-52 left-48 -top-20 select-none hidden sm:block lg:hidden xl:block'
                                 width={160}
                                 height={110}
                                 alt="design"
