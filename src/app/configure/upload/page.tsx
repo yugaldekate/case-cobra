@@ -25,7 +25,7 @@ const Page = () => {
     const [isPending, startTransition] = useTransition();
 
     const { startUpload, isUploading } = useUploadThing('imageUploader', {
-        onClientUploadComplete: ([data]) => {
+        onClientUploadComplete: async ([data]) => {
             const configId = data.serverData.configId;
 
             startTransition(() => {
@@ -37,8 +37,8 @@ const Page = () => {
         },
     });
 
-    const onDropAccepted = (acceptedFiles: File[]) => {
-        startUpload(acceptedFiles, { configId: undefined });
+    const onDropAccepted = async(acceptedFiles: File[]) => {
+        await startUpload(acceptedFiles, { configId: undefined });
     
         setIsDragOver(false);
     };
