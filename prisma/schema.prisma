@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PhoneModel {
+  iphonex
+  iphone11
+  iphone12
+  iphone13
+  iphone14
+  iphone15
+}
+
+enum CaseMaterial {
+  silicone
+  polycarbonate
+}
+
+enum CaseFinish {
+  smooth
+  textured
+}
+
+enum CaseColor {
+  black
+  crimson_red
+  mint_green
+  lavender
+  coral
+  charcoal_gray
+}
+
+model Configuration {
+  id                String          @id @default(cuid())
+  width             Int
+  height            Int
+  imageUrl          String          @db.Text
+  croppedImageUrl   String?         @db.Text
+  color             CaseColor?
+  model             PhoneModel?
+  material          CaseMaterial?
+  finish            CaseFinish?
+
+  orders             Order[]
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String
+  orders      Order[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum OrderStatus {
+  fulfilled
+  shipped
+  awaiting_shipment
+}
+
+model Order {
+  id                 String           @id @default(cuid())
+  amount             Float
+  isPaid             Boolean          @default(false)
+  status             OrderStatus      @default(awaiting_shipment)
+
+  userId             String
+  user               User             @relation(fields: [userId], references: [id])
+
+  configurationId    String
+  configuration      Configuration    @relation(fields: [configurationId], references: [id])
+
+  shippingAddressId  String?
+  shippingAddress    ShippingAddress? @relation(fields: [shippingAddressId], references: [id])
+
+  billingAddressId   String?
+  billingAddress     BillingAddress?  @relation(fields: [billingAddressId], references: [id])
+
+  createdAt          DateTime         @default(now())
+  updated            DateTime         @updatedAt
+}
+
+model ShippingAddress {
+  id            String  @id @default(cuid())
+  name          String
+  street        String
+  city          String
+  postalCode    String
+  country       String
+  state         String?
+  phoneNumber   String?
+
+  orders        Order[]
+}
+
+model BillingAddress {
+  id            String  @id @default(cuid())
+  name          String
+  street        String
+  city          String
+  postalCode    String
+  country       String
+  state         String?
+  phoneNumber   String?
+
+  orders        Order[]
+}
