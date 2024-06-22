@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import type { Dispatch, SetStateAction } from 'react';
+
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 
 import { buttonVariants } from './ui/button';
@@ -25,7 +26,8 @@ const LoginModal = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: Dispatc
                     <DialogDescription className='text-base text-center py-2'>
                         <span className='font-medium text-zinc-900'>
                             Your configuration was saved!
-                        </span>{' '}
+                        </span>
+                        <br/>
                         Please login or create an account to complete your purchase.
                     </DialogDescription>
                 </DialogHeader>
