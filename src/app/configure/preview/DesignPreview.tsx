@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { COLORS, MODELS } from "@/validators/option-validator";
 
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
+import { useModal } from "@/lib/use-modal";
 
 const confettiConfig = {
     angle: 90,
@@ -46,6 +47,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
     const [showConfetti, setShowConfetti] = useState(false);
+
+    const { onOpen } = useModal();
 
     const router = useRouter();
     const { toast } = useToast();
@@ -90,7 +93,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
         } else {
           // need to log in
           localStorage.setItem('configurationId', id);
-          setIsLoginModalOpen(true);
+          // setIsLoginModalOpen(true);
+          onOpen(); 
         }
     }
 
@@ -103,7 +107,9 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
                 />
             </div>
 
-            <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
+            {/* <div className="absolute top-[60%] inset-0 flex items-center justify-center z-50">
+                <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
+            </div> */}
 
             <div className='mt-20 flex flex-col items-center sm:gap-x-6 md:grid md:grid-cols-12 md:grid-rows-1 md:gap-x-8 lg:gap-x-12 text-sm'>
                 <div className='md:col-span-4 md:row-span-2 md:row-end-2 lg:col-span-3'>

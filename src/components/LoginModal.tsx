@@ -1,5 +1,7 @@
+"use client"
+
 import Image from 'next/image';
-import type { Dispatch, SetStateAction } from 'react';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 
@@ -8,9 +10,20 @@ import { buttonVariants } from './ui/button';
 import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs'
 
 const LoginModal = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
+
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) {
+        return null;
+    }
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent className='absolute z-[9999999]'>
+            <DialogContent className='z-[999999]'>
                 <DialogHeader>
                     <div className='relative mx-auto w-24 h-24 mb-2'>
                         <Image
