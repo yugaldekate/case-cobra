@@ -61,7 +61,7 @@ const Page = async () => {
         },
     })
   
-    const WEEKLY_GOAL = 500
+    const WEEKLY_GOAL = 600
     const MONTHLY_GOAL = 2500
   
     return (
