@@ -9,7 +9,7 @@ import { buttonVariants } from './ui/button';
 
 import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs'
 
-const LoginModal = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>> }) => {
+const LoginModal = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: () => void }) => {
 
     const [isMounted, setIsMounted] = useState(false);
 

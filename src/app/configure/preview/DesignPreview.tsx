@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 
 import { createCheckoutSession } from "./actions";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+// import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 import { cn, formatPrice } from "@/lib/utils";
 
@@ -24,6 +24,7 @@ import { COLORS, MODELS } from "@/validators/option-validator";
 
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { useModal } from "@/lib/use-modal";
+import { getAuthStatus } from "@/app/auth-callback/actions";
 
 const confettiConfig = {
     angle: 90,
@@ -43,7 +44,14 @@ const confettiConfig = {
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
-    const { user } = useKindeBrowserClient();
+    // const { user } = useKindeBrowserClient();
+    const { data: isLoggedIn } = useQuery({
+        queryKey: ['auth-callback'],
+        queryFn: async () => await getAuthStatus(),
+        retry: true,
+        retryDelay: 500,
+    });
+
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
     const [showConfetti, setShowConfetti] = useState(false);
@@ -88,16 +96,26 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
     const handleCheckout = () => {
 
-        console.log("configure/preview", user);
+        // console.log("configure/preview", user);
 
-        if (user) {
-          // create payment session
-          createPaymentSession({ configId: id })
+        // if (user) {
+        //   // create payment session
+        //   createPaymentSession({ configId: id })
+        // } else {
+        //   // need to log in
+        //   localStorage.setItem('configurationId', id);
+        //   // setIsLoginModalOpen(true);
+        //   onOpen(); 
+        // }
+
+        if (isLoggedIn?.success) {
+            // create payment session
+            createPaymentSession({ configId: id })
         } else {
-          // need to log in
-          localStorage.setItem('configurationId', id);
-          // setIsLoginModalOpen(true);
-          onOpen(); 
+            // need to log in
+            localStorage.setItem('configurationId', id);
+            // setIsLoginModalOpen(true);
+            onOpen(); 
         }
     }
 
