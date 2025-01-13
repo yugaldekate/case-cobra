@@ -44,11 +44,20 @@ const confettiConfig = {
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     // const { user } = useKindeBrowserClient();
-    const { data: isLoggedIn } = useQuery({
-        queryKey: ['auth-callback'],
+    const { data } = useQuery({
+        queryKey: ['designPreview-callback'],
         queryFn: async () => await getAuthStatus(),
     });
+
+    console.log("designPreview : ", data);
+    
+
+    if(data){
+        setIsLoggedIn(data?.success);
+    }
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
@@ -93,20 +102,9 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     });
 
     const handleCheckout = () => {
-
-        // console.log("configure/preview", user);
-
-        // if (user) {
-        //   // create payment session
-        //   createPaymentSession({ configId: id })
-        // } else {
-        //   // need to log in
-        //   localStorage.setItem('configurationId', id);
-        //   // setIsLoginModalOpen(true);
-        //   onOpen(); 
-        // }
-
-        if (isLoggedIn?.success) {
+        console.log("handlecheckout called");
+        
+        if (isLoggedIn) {
             // create payment session
             createPaymentSession({ configId: id })
         } else {
@@ -216,7 +214,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
                         <div className='mt-8 flex justify-end pb-12'>
                             <Button
-                                onClick={() => handleCheckout()}
+                                onClick={ handleCheckout}
                                 className='px-4 sm:px-6 lg:px-8'
                                 disabled={isPending}
                                 isLoading={isPending}
