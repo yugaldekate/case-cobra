@@ -6,7 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { createCheckoutSession } from "./actions";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+// import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 import { cn, formatPrice } from "@/lib/utils";
 
@@ -18,7 +18,7 @@ import Confetti from 'react-dom-confetti';
 import { Configuration } from "@prisma/client";
 
 import Phone from "@/components/Phone";
-import LoginModal from "@/components/LoginModal";
+// import LoginModal from "@/components/LoginModal";
 import { Button } from "@/components/ui/button";
 import { COLORS, MODELS } from "@/validators/option-validator";
 
@@ -44,12 +44,10 @@ const confettiConfig = {
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
-    const { user } = useKindeBrowserClient();
+    // const { user } = useKindeBrowserClient();
     const { data: isLoggedIn } = useQuery({
         queryKey: ['auth-callback'],
         queryFn: async () => await getAuthStatus(),
-        retry: true,
-        retryDelay: 500,
     });
 
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
@@ -98,25 +96,25 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
         // console.log("configure/preview", user);
 
-        if (user) {
-          // create payment session
-          createPaymentSession({ configId: id })
-        } else {
-          // need to log in
-          localStorage.setItem('configurationId', id);
-          // setIsLoginModalOpen(true);
-          onOpen(); 
-        }
-
-        // if (isLoggedIn?.success) {
-        //     // create payment session
-        //     createPaymentSession({ configId: id })
+        // if (user) {
+        //   // create payment session
+        //   createPaymentSession({ configId: id })
         // } else {
-        //     // need to log in
-        //     localStorage.setItem('configurationId', id);
-        //     // setIsLoginModalOpen(true);
-        //     onOpen(); 
+        //   // need to log in
+        //   localStorage.setItem('configurationId', id);
+        //   // setIsLoginModalOpen(true);
+        //   onOpen(); 
         // }
+
+        if (isLoggedIn?.success) {
+            // create payment session
+            createPaymentSession({ configId: id })
+        } else {
+            // need to log in
+            localStorage.setItem('configurationId', id);
+            // setIsLoginModalOpen(true);
+            onOpen(); 
+        }
     }
 
     return (
