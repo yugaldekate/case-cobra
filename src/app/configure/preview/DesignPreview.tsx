@@ -1,20 +1,16 @@
-"use client"
+"use client";
 
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-
 import { checkIsLoggedIn, createCheckoutSession } from "./actions";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { cn, formatPrice } from "@/lib/utils";
-
 import { useEffect, useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
-
 import Confetti from 'react-dom-confetti';
 
 import { Configuration } from "@prisma/client";
-
 import Phone from "@/components/Phone";
 import { Button } from "@/components/ui/button";
 import { COLORS, MODELS } from "@/validators/option-validator";
@@ -36,27 +32,28 @@ const confettiConfig = {
         '#1ABC9C', '#E67E22', '#2980B9', '#D35400', '#C0392B', '#27AE60', 
         '#16A085', '#F1C40F'
     ],
-}
+};
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
-
-    const {isLoggedIn} = useLogin();
-    const {onClose} = useModal();
-   
-
+    const { isLoggedIn } = useLogin();
+    const { onClose } = useModal();
     const [showConfetti, setShowConfetti] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const { onOpen } = useModal();
-
     const router = useRouter();
     const { toast } = useToast();
 
-    useEffect(()=> {
+    useEffect(() => {
         setShowConfetti(true);
+        const checkLoginStatus = async () => {
+            const { isLoggedIn } = await checkIsLoggedIn();
+            setLoggedIn(isLoggedIn);
+        };
+        checkLoginStatus();
     }, []);
 
     const { id, color, model, finish, material } = configuration;
-
     const tw = COLORS.find((supportedColor) => supportedColor.value === color)?.tw;
     const { label: modelLabel } = MODELS.options.find(({ value }) => value === model)!;
 
@@ -70,9 +67,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
         onSuccess: ({ url }) => {
             if (url) {
                 router.push(url);
-            }
-            else{
-                throw new Error('Unable to retrieve payment URL.')
+            } else {
+                throw new Error('Unable to retrieve payment URL.');
             }
         },
         onError: () => {
@@ -85,41 +81,26 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     });
 
     const handleCheckout = async () => {
-        console.log("handlecheckout called");
+        console.log("handleCheckout called");
 
-        const { isLoggedIn } = await checkIsLoggedIn();
-        
-        if (isLoggedIn) {
+        if (loggedIn) {
             onClose();
-            // create payment session
             createPaymentSession({ configId: id });
         } else {
-            // need to log in
             localStorage.setItem('configurationId', id);
-            // setIsLoginModalOpen(true);
-            onOpen(); 
+            onOpen();
         }
-    }
+    };
 
     return (
         <>
             <div aria-hidden='true' className='pointer-events-none select-none absolute inset-0 overflow-hidden flex justify-center'>
-                <Confetti
-                    active={showConfetti}
-                    config={confettiConfig}
-                />
+                <Confetti active={showConfetti} config={confettiConfig} />
             </div>
-
-            {/* <div className="absolute top-[60%] inset-0 flex items-center justify-center z-50">
-                <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
-            </div> */}
 
             <div className='mt-20 flex flex-col items-center sm:gap-x-6 md:grid md:grid-cols-12 md:grid-rows-1 md:gap-x-8 lg:gap-x-12 text-sm'>
                 <div className='md:col-span-4 md:row-span-2 md:row-end-2 lg:col-span-3'>
-                    <Phone
-                        className={cn(`bg-${tw}`, "max-w-[150px] md:max-w-full")}
-                        imgSrc={configuration.croppedImageUrl!}
-                    />
+                    <Phone className={cn(`bg-${tw}`, "max-w-[150px] md:max-w-full")} imgSrc={configuration.croppedImageUrl!} />
                 </div>
 
                 <div className='mt-6 md:col-span-9 md:row-end-1'>
@@ -200,7 +181,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
                         <div className='mt-8 flex justify-end pb-12'>
                             <Button
-                                onClick={ handleCheckout}
+                                onClick={handleCheckout}
                                 className='px-4 sm:px-6 lg:px-8'
                                 disabled={isPending}
                                 isLoading={isPending}
@@ -210,9 +191,9 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
                         </div>
                     </div>
                 </div>
-            </div>    
+            </div>
         </>
-    )
-}
+    );
+};
 
-export default DesignPreview
+export default DesignPreview;
