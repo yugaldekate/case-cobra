@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 import { db } from '@/db';
 import { formatPrice } from '@/lib/utils';
@@ -9,17 +8,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 import StatusDropdown from './StatusDropdown';
+import { checkIsAdmin } from './actions';
   
 const Page = async () => {
-    const { getUser } = getKindeServerSession()
-    const user = await getUser()
-
-    console.log("dashboard user : ", user);
-    
+    const {isAdmin} = await checkIsAdmin();
   
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL
-  
-    if (!user || user.email !== ADMIN_EMAIL) {
+    if (!isAdmin) {
         return notFound()
     }
   

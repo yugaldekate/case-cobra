@@ -14,6 +14,9 @@ export const createCheckoutSession = async ({ configId }: { configId: string }) 
     const { getUser } = getKindeServerSession();
     const user = await getUser();
 
+    console.log("createChecoutSession : ", user);
+    
+
     if (!user) {
         throw new Error('You need to be logged in');
     }
@@ -82,3 +85,16 @@ export const createCheckoutSession = async ({ configId }: { configId: string }) 
 
     return { url: stripeSession.url };
 }
+
+export const checkIsLoggedIn = async() => {
+    const { getUser } = getKindeServerSession();
+      const user = await getUser();
+  
+      if (!user?.id || !user.email) {
+        return {isLoggedIn : false}
+      }
+    
+      console.log("checkIsLoggedIn : ", user);
+      
+      return { isLoggedIn: true }
+  }

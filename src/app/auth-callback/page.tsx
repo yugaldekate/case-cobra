@@ -8,10 +8,14 @@ import { Loader2 } from 'lucide-react';
 import { getAuthStatus } from './actions';
 
 import { useQuery } from '@tanstack/react-query';
+import { useAdmin, useLogin, useModal } from '@/lib/use-modal';
 
 const Page = () => {
     const router = useRouter();
     const [configId, setConfigId] = useState<string | null>(null);
+
+    const {onLogin} = useLogin();
+    const {onClose} = useModal();
 
     useEffect(() => {
         const configurationId = localStorage.getItem('configurationId');
@@ -27,8 +31,13 @@ const Page = () => {
         retryDelay: 500,
     });
 
+    console.log("AuthCallback page : ", data);
+    
     if (data?.success) {
         if (configId) {
+            onLogin(); //set isLogin = true
+            onClose(); //close Login modal
+            
             localStorage.removeItem('configurationId');
             router.push(`/configure/preview?id=${configId}`);
         } else {

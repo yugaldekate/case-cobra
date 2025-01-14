@@ -3,10 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 
-import { createCheckoutSession } from "./actions";
+import { checkIsLoggedIn, createCheckoutSession } from "./actions";
 import { useMutation, useQuery } from "@tanstack/react-query";
-
-// import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 import { cn, formatPrice } from "@/lib/utils";
 
@@ -18,13 +16,11 @@ import Confetti from 'react-dom-confetti';
 import { Configuration } from "@prisma/client";
 
 import Phone from "@/components/Phone";
-// import LoginModal from "@/components/LoginModal";
 import { Button } from "@/components/ui/button";
 import { COLORS, MODELS } from "@/validators/option-validator";
 
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
-import { useModal } from "@/lib/use-modal";
-import { getAuthStatus } from "@/app/auth-callback/actions";
+import { useLogin, useModal } from "@/lib/use-modal";
 
 const confettiConfig = {
     angle: 90,
@@ -44,22 +40,9 @@ const confettiConfig = {
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    // const { user } = useKindeBrowserClient();
-    const { data } = useQuery({
-        queryKey: ['designPreview-callback'],
-        queryFn: async () => await getAuthStatus(),
-    });
-
-    console.log("designPreview : ", data);
-    
-
-    if(data){
-        setIsLoggedIn(data?.success);
-    }
-
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+    const {isLoggedIn} = useLogin();
+    const {onClose} = useModal();
+   
 
     const [showConfetti, setShowConfetti] = useState(false);
 
@@ -101,12 +84,15 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
         },
     });
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         console.log("handlecheckout called");
+
+        const { isLoggedIn } = await checkIsLoggedIn();
         
         if (isLoggedIn) {
+            onClose();
             // create payment session
-            createPaymentSession({ configId: id })
+            createPaymentSession({ configId: id });
         } else {
             // need to log in
             localStorage.setItem('configurationId', id);
