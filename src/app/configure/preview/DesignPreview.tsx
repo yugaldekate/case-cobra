@@ -46,17 +46,14 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
     useEffect(() => {
         setShowConfetti(true);
-        const checkLoginStatus = async () => {
-            const { isLoggedIn } = await checkIsLoggedIn();
-            setLoggedIn(isLoggedIn);
-        };
-        checkLoginStatus();
     }, []);
 
     useEffect(() => {
         const checkLoginStatus = async () => {
             const { isLoggedIn } = await checkIsLoggedIn();
             setLoggedIn(isLoggedIn);
+            console.log("useEffect isLOGGEDIN : ", isLoggedIn );
+            
         };
         checkLoginStatus();
     }, [isLoggedIn]);
