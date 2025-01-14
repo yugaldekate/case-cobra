@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 
 import { buttonVariants } from './ui/button';
 
-import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs'
+import Link from 'next/link';
 
 const LoginModal = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: () => void }) => {
 
@@ -46,12 +46,12 @@ const LoginModal = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: () => v
                 </DialogHeader>
 
                 <div className='grid grid-cols-2 gap-6 divide-x divide-gray-200'>
-                    <LoginLink className={buttonVariants({ variant: 'outline' })}>
+                    <Link href='/api/auth/register' className={buttonVariants({ variant: 'outline' })}>
                         Login
-                    </LoginLink>
-                    <RegisterLink className={buttonVariants({ variant: 'default' })}>
+                    </Link>
+                    <Link href='/api/auth/login' className={buttonVariants({ variant: 'default' })}>
                         Sign up
-                    </RegisterLink>
+                    </Link>
                 </div>
             </DialogContent>
         </Dialog>
