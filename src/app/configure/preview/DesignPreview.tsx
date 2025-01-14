@@ -53,6 +53,14 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
         checkLoginStatus();
     }, []);
 
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            const { isLoggedIn } = await checkIsLoggedIn();
+            setLoggedIn(isLoggedIn);
+        };
+        checkLoginStatus();
+    }, [isLoggedIn]);
+
     const { id, color, model, finish, material } = configuration;
     const tw = COLORS.find((supportedColor) => supportedColor.value === color)?.tw;
     const { label: modelLabel } = MODELS.options.find(({ value }) => value === model)!;
