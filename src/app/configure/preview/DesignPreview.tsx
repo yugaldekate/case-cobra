@@ -56,7 +56,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
             
         };
         checkLoginStatus();
-    }, [isLoggedIn]);
+    }, []);
 
     const { id, color, model, finish, material } = configuration;
     const tw = COLORS.find((supportedColor) => supportedColor.value === color)?.tw;
