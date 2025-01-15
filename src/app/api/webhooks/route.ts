@@ -13,8 +13,6 @@ export async function POST(req: Request) {
         const body = await req.text();
         const signature = req.headers.get('stripe-signature');  // Corrected to use req.headers.get()
 
-        console.log("Stripe Signature: ", signature);
-
         if (!signature) {
             return new Response('Invalid signature', { status: 400 });
         }
@@ -33,8 +31,6 @@ export async function POST(req: Request) {
             if (!session.customer_details?.email) {
                 throw new Error('Missing user email');
             }
-
-            console.log("Event data: ", session);
 
             const { userId, orderId } = session.metadata || {
                 userId: null,

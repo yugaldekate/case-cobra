@@ -30,13 +30,9 @@ const Page = () => {
         retry: true,
         retryDelay: 500,
     });
-
-    console.log("AuthCallback page : ", data);
     
     const isAdmin = data?.user.email === "yugaldekate72@gmail.com";
     
-    console.log("AuthCallback page isAdmin  : ", isAdmin);
-
     if(data?.success){
         localStorage.setItem('isLogin', JSON.stringify(true));
         localStorage.setItem('isAdmin', JSON.stringify(isAdmin));

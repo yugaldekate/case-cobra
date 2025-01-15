@@ -145,8 +145,6 @@ const Page = () => {
         }
     }, []);
 
-    console.log("dashboard :", isAdmin);
-
     useEffect(() => {
         const fetchData = async () => {
             try {

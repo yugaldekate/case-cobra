@@ -25,8 +25,6 @@ export const getAuthStatus = async () => {
             },
         });
     }
-
-    console.log("getAuthStatus : ", existingUser);
     
     return { success: true, user: existingUser }
 }

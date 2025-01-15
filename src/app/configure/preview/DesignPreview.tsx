@@ -90,7 +90,6 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     });
 
     const handleCheckout = async () => {
-        console.log("handleCheckout called");
 
         if (loggedIn) {
             onClose();
