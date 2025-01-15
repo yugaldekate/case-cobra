@@ -8,16 +8,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 import StatusDropdown from './StatusDropdown';
-import { checkIsAdmin } from './actions';
+import { getUser } from './actions';
   
 const Page = async () => {
-    const {isAdmin} = await checkIsAdmin();
+    const {user} = await getUser();
 
-    console.log("dashboard isAdmin : ", isAdmin);
+    console.log("dashboard isAdmin : ", user);
     
   
-    if (!isAdmin) {
-        return notFound()
+    if (user?.email !== "yugaldekate72@gmail.com") {
+        return notFound();
     }
   
     // all orders within one week
