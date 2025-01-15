@@ -33,6 +33,15 @@ const Page = () => {
 
     console.log("AuthCallback page : ", data);
     
+    const isAdmin = data?.user.email === "yugaldekate72@gmail.com";
+    
+    console.log("AuthCallback page isAdmin  : ", isAdmin);
+
+    if(data?.success){
+        localStorage.setItem('isLogin', JSON.stringify(true));
+        localStorage.setItem('isAdmin', JSON.stringify(isAdmin));
+    }
+    
     if (data?.success) {
         if (configId) {
             onLogin(); //set isLogin = true

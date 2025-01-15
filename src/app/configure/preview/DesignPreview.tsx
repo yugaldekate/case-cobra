@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { COLORS, MODELS } from "@/validators/option-validator";
 
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
-import { useLogin, useModal } from "@/lib/use-modal";
+import { useModal } from "@/lib/use-modal";
 
 const confettiConfig = {
     angle: 90,
@@ -35,7 +35,6 @@ const confettiConfig = {
 };
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
-    const { isLoggedIn } = useLogin();
     const { onClose } = useModal();
     const [showConfetti, setShowConfetti] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
@@ -49,15 +48,13 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     }, []);
 
     useEffect(() => {
-        const checkLoginStatus = async () => {
-            const { isLoggedIn } = await checkIsLoggedIn();
-            setLoggedIn(isLoggedIn);
-            console.log("useEffect isLOGGEDIN : ", isLoggedIn );
-            
-        };
-        checkLoginStatus();
+        const isLogin = localStorage.getItem('isLogin');
+        if (isLogin !== null) {
+            const parsedIsLogin = JSON.parse(isLogin); // Parse the string value
+            setLoggedIn(parsedIsLogin);
+        }
     }, []);
-
+    
     const { id, color, model, finish, material } = configuration;
     const tw = COLORS.find((supportedColor) => supportedColor.value === color)?.tw;
     const { label: modelLabel } = MODELS.options.find(({ value }) => value === model)!;

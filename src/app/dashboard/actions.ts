@@ -54,10 +54,3 @@ export const getData = async () => {
 
     return {orders, lastWeekSum, lastMonthSum};
 }
-
-export const getUser = async () => {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    return { user: user };
-};
