@@ -73,7 +73,7 @@ export const checkIsAdmin = async (): Promise<{ isAdmin: boolean }> => {
 
     console.log("check is admin :", existingUser?.email === "yugaldekate72@gmail.com");
      
-    if (existingUser?.email !== process.env.ADMIN_EMAIL) {
+    if (existingUser?.email !== "yugaldekate72@gmail.com") {
       return { isAdmin: false };
     }
 
