@@ -55,25 +55,31 @@ export const getData = async () => {
     return {orders, lastWeekSum, lastMonthSum};
 }
 
-export const checkIsAdmin = async() => {
-  const { getUser } = getKindeServerSession();
+export const checkIsAdmin = async (): Promise<{ isAdmin: boolean }> => {
+  try {
+    const { getUser } = getKindeServerSession();
     const user = await getUser();
 
     if (!user?.id || !user.email) {
-      return {isAdmin : false}
+      return { isAdmin: false };
     }
 
     const existingUser = await db.user.findFirst({
-      where: { 
-        id: user.id,
-      },
+      where: { id: user.id },
     });
 
-    if(existingUser?.email !== process.env.ADMIN_EMAIL){
-      return {isAdmin : false};
+    console.log("check is admin1 :", typeof process.env.ADMIN_EMAIL, process.env.ADMIN_EMAIL);
+    console.log("check is admin2 :", typeof existingUser?.email, existingUser?.email);
+
+    console.log("check is admin :", existingUser?.email === process.env.ADMIN_EMAIL);
+     
+    if (existingUser?.email !== process.env.ADMIN_EMAIL) {
+      return { isAdmin: false };
     }
 
-    console.log("checkIsAdmin : ", existingUser);
-    
-    return { isAdmin: true }
-}
+    return { isAdmin: true };
+  } catch (error) {
+    console.error("Error checking admin status:", error);
+    return { isAdmin: false }; // Fallback to non-admin if an error occurs
+  }
+};
