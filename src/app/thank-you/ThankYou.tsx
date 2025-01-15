@@ -9,6 +9,7 @@ import { getPaymentStatus } from './actions';
 import { formatPrice } from '@/lib/utils';
 
 import PhonePreview from '@/components/PhonePreview';
+import { useEffect, useState } from 'react';
 
 
 const ThankYou = () => {
@@ -16,9 +17,19 @@ const ThankYou = () => {
     const searchParams = useSearchParams();
     const orderId = searchParams.get('orderId') || '';
 
+    const [userId, setUserId] = useState<string>('');
+
+    useEffect(() => {
+        const userId = localStorage.getItem('userId');
+        if (userId !== null) {
+            const parsedUserId = JSON.parse(userId); // Parse the string value
+            setUserId(parsedUserId);
+        }
+    }, []);
+
     const { data } = useQuery({
         queryKey: ['get-payment-status'],
-        queryFn: async () => await getPaymentStatus({ orderId: orderId }),
+        queryFn: async () => await getPaymentStatus({ orderId: orderId, userId: userId }),
         retry: true,
         retryDelay: 500,
     });
