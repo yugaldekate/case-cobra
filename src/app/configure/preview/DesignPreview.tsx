@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { checkIsLoggedIn, createCheckoutSession } from "./actions";
+import { createCheckoutSession } from "./actions";
 import { useMutation } from "@tanstack/react-query";
 
 import { cn, formatPrice } from "@/lib/utils";
@@ -38,6 +38,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     const { onClose } = useModal();
     const [showConfetti, setShowConfetti] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [userId, setUserId] = useState('');
 
     const { onOpen } = useModal();
     const router = useRouter();
@@ -52,6 +53,12 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
         if (isLogin !== null) {
             const parsedIsLogin = JSON.parse(isLogin); // Parse the string value
             setLoggedIn(parsedIsLogin);
+        }
+
+        const userId = localStorage.getItem('userId');
+        if (userId !== null) {
+            const parsedUserId = JSON.parse(userId); // Parse the string value
+            setUserId(parsedUserId);
         }
     }, []);
     
@@ -87,7 +94,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
         if (loggedIn) {
             onClose();
-            createPaymentSession({ configId: id });
+            createPaymentSession({ configId: id, userId: userId });
         } else {
             localStorage.setItem('configurationId', id);
             onOpen();

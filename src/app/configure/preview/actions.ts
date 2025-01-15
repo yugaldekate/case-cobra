@@ -7,19 +7,7 @@ import { stripe } from '@/lib/stripe';
 
 import { BASE_PRICE, PRODUCT_PRICES } from '@/config/products';
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-
-export const createCheckoutSession = async ({ configId }: { configId: string }) => {
-
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    console.log("createChecoutSession : ", user);
-    
-
-    if (!user) {
-        throw new Error('You need to be logged in');
-    }
+export const createCheckoutSession = async ({ configId, userId }: { configId: string, userId: string }) => {
 
     const configuration = await db.configuration.findUnique({
         where: { id: configId },
@@ -37,11 +25,11 @@ export const createCheckoutSession = async ({ configId }: { configId: string }) 
 
     let order: Order | undefined = undefined
 
-    console.log(user.id, configuration.id);
+    console.log(userId, configuration.id);
 
     const existingOrder = await db.order.findFirst({
         where: {
-            userId: user.id,
+            userId: userId,
             configurationId: configuration.id,
         },
     });
@@ -51,7 +39,7 @@ export const createCheckoutSession = async ({ configId }: { configId: string }) 
     } else {
         order = await db.order.create({
             data: {
-                userId: user.id,
+                userId: userId,
                 configurationId: configuration.id,
                 amount: price / 100,
             },
@@ -70,7 +58,7 @@ export const createCheckoutSession = async ({ configId }: { configId: string }) 
     const stripeSession = await stripe.checkout.sessions.create({
         mode: 'payment',
         metadata: {
-            userId: user.id,
+            userId: userId,
             orderId: order.id,
         },
         
@@ -85,16 +73,3 @@ export const createCheckoutSession = async ({ configId }: { configId: string }) 
 
     return { url: stripeSession.url };
 }
-
-export const checkIsLoggedIn = async() => {
-    const { getUser } = getKindeServerSession();
-      const user = await getUser();
-  
-      if (!user?.id || !user.email) {
-        return {isLoggedIn : false}
-      }
-    
-      console.log("checkIsLoggedIn : ", user);
-      
-      return { isLoggedIn: true }
-  }

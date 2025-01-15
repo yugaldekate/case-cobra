@@ -40,6 +40,7 @@ const Page = () => {
     if(data?.success){
         localStorage.setItem('isLogin', JSON.stringify(true));
         localStorage.setItem('isAdmin', JSON.stringify(isAdmin));
+        localStorage.setItem('userId', JSON.stringify(data?.user?.id));
     }
     
     if (data?.success) {
