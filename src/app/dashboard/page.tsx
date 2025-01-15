@@ -12,6 +12,9 @@ import { checkIsAdmin } from './actions';
   
 const Page = async () => {
     const {isAdmin} = await checkIsAdmin();
+
+    console.log("dashboard isAdmin : ", isAdmin);
+    
   
     if (!isAdmin) {
         return notFound()
